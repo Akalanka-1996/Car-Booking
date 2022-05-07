@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Modal, Form, Table } from "react-bootstrap";
+import { Button, Modal, Form, Table, Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
@@ -20,38 +20,18 @@ const UserBooking = () => {
     
         setBookings(data);
       };
-    
-      const cancelHandler = async (id) => {
+     
+
+      const deleteHandler = async (id) => {
         try {
-
-
-          const res = await axios.put(`http://localhost:5000/newbooking/${id}`);
+          const res = await axios.delete(`http://localhost:5000/newbooking/${id}`);
           console.log("Item successfully deleted.");
-          alert("Booking Cancelled");
+          alert("Booking deleted");
           window.location.reload();
         } catch (error) {
           alert(error);
         }
-      }
-
-      const confirmHandler = async (id) => {
-        try {
-
-          const config = {
-            headers: {
-              "Content-type": "application/json",
-            },
-          };
-
-          const res = await axios.put(`http://localhost:5000/newbooking/update-confirmed-booking/${id}`);
-          console.log("Item successfully updated.");
-          alert("Booking Confirmed");
-          window.location.reload();
-        } catch (error) {
-          alert(error);
-        }
-
-      }
+      };
     
   return (
     <div className="title">
@@ -63,55 +43,37 @@ const UserBooking = () => {
         My Bookings
       </h1>
 
-      <Table striped bordered hover id="table-to-xls">
-        <thead>
-          <tr>
-            <th style={{ fontSize: 25 }}>Name</th>
-            <th style={{ fontSize: 25 }}>Contact No.</th>
-            <th style={{ fontSize: 25 }}>Handover Date</th>
-            <th style={{ fontSize: 25 }}>Return Date</th>
-            <th style={{ fontSize: 25 }}>Action</th>
+      
 
+      {bookings.map((booking) => (
+          <Card style={{ width: "18rem" }} key={booking._id}>
+            {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
+            <Card.Body>
+              <Card.Title>{booking.name}</Card.Title>
+              <Card.Subtitle className="mb-2 text-muted">
+                {booking.contact_no}
+              </Card.Subtitle>
+              <Card.Subtitle className="mb-2 text-muted">
+                {booking.handover_date}
+              </Card.Subtitle>
+              <Card.Subtitle className="mb-2 text-muted">
+                {booking.return_date} LKR
+              </Card.Subtitle>
+              <Button variant="warning" 
+              // onClick={handleShow}
+              >
+                
+                Edit
+              </Button>&nbsp; &nbsp;
 
-          </tr>
-        </thead>
-        <tbody>
-          {bookings.map((booking) => (
-              <tr key={booking._id} style={{ fontSize: 15}}>
-                  <td>{booking.name}</td>
-                  <td>{booking.contact_no}</td>
-              
-                 
-                  <td>{booking.handover_date}</td>
-                  
-                  <td>{booking.return_date}</td>
-                  <td>
-                {/* <Button
-                  size="sm"
-                  variant="primary"
-                  //   onClick={() => {
-                  //     handleViewShow(SetRowData(item));
-                  //   }}
-                >
-                  View
-                </Button> */}
-                <Button size="sm" variant="success" onClick={() => confirmHandler(booking._id)}>
-                  Confirm
-                </Button>
-                <Button
-                  size="sm"
-                  variant="warning"
-                  onClick={() => cancelHandler(booking._id)}
-                >
-                  Cancel
-                </Button>
-              </td>
-
-              </tr>
-
-          ))}
-        </tbody>
-      </Table>
+              <Button variant="danger" 
+              onClick={() => deleteHandler(booking._id)}
+              >
+                Delete
+              </Button>
+            </Card.Body>
+          </Card>
+        ))}
     </div>
   );
 };
