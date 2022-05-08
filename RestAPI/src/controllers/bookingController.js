@@ -102,6 +102,46 @@ const updateBooking = asyncHandler(async (req, res) => {
   }
 });
 
+// update newbookings
+
+const updateNewBooking = asyncHandler(async (req, res) => {
+  const {
+    name,
+    contact_no,
+    email,
+    location,
+    handover_date,
+    handover_time,
+    return_date,
+    isCancelled,
+    isConfirmed,
+  } = req.body;
+
+  const newbooking = await newBooking.findById(req.params.id);
+  console.log(newbooking)
+
+  if (newbooking) {
+     newbooking.name = name;
+     newbooking.contact_no = contact_no;
+     newbooking.email = email;
+    newbooking.location = location;
+     newbooking.handover_date = handover_date;
+     newbooking.handover_time = handover_time;
+     newbooking.return_date = return_date;
+    newbooking.isCancelled = true;
+     newbooking.isConfirmed = isConfirmed;
+
+
+    const updatedBooking = await newbooking.save();
+    console.log(updatedBooking)
+    res.json(updatedBooking);
+  } else {
+    res.status(404);
+    throw new Error("Booking not found");
+  }
+});
+
+
 const updateConfirmedBooking = asyncHandler(async (req, res) => {
   const {
     name,
@@ -184,5 +224,6 @@ module.exports = {
   getCancelledBookings,
   getConfirmededBookings,
   updateConfirmedBooking,
-  deleteBooking
+  deleteBooking,
+  updateNewBooking
 };

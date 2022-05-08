@@ -31,7 +31,7 @@ const AdminBookings = () => {
         (data) => {
           console.log(data);
 
-          alert(data);
+          // alert(data);
         },
         (error) => {
           const resMessage =

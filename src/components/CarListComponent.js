@@ -56,7 +56,7 @@ const CarListComponent = () => {
 
         alert("Booking Added!")
         handleClose()
-        navigete('/my-bookings')
+        // navigete('/my-bookings')
 
         // store data in local storage
         console.log(data);
@@ -70,12 +70,18 @@ const CarListComponent = () => {
 
   }
 
+  const bookingList = () => {
+    navigete('/my-bookings')
+  }
+
   return (
     <div style={{  alignItems:'center'}}>
       <style type="text/css">{`.main-container {display:none}`}</style>
       <style type="text/css">{`.sidebar {display:none}`}</style>
       <style type="text/css">{`.top_section {display:none}`}</style>
-      <h1>CarList page</h1>
+      <h1 style={{ textAlign: "center", alignSelf: "center" }}>Select a Car</h1>
+
+      <Button variant="success" onClick={bookingList}>See My Bookings</Button> <br></br>
 
       <div style={{  alignItems:'center'}}>
         {cars.map((car) => (
