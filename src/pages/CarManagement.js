@@ -111,6 +111,30 @@ const CarManagement = () => {
 
   }
 
+  const editHandler = async (id)  => {
+    console.log("abc");
+    console.log(id)
+    console.log("def");
+
+    try {
+      const config = {
+        headers:{
+            "Content-type":"application/json"
+        }
+    }
+
+      const res = await axios.put(`http://localhost:5000/Carmanagement/${id._id}`, {
+        title: id.title, email: id.email, brand: id.brand, price: id.price, fuel: id.price, model: id.model
+      }, config);
+      console.log("Item successfully edited");
+      alert("Brand edited");
+      window.location.reload();
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+
   return (
     <div className="title">
       <style type="text/css">{`.navlink {display:none}`}</style>
@@ -163,11 +187,11 @@ const CarManagement = () => {
                         handleViewShow(SetRowData(item));
                       }}
                     >
-                      View
-                    </Button>
-                    <Button size="sm" variant="warning">
                       Edit
                     </Button>
+                    {/* <Button size="sm" variant="warning">
+                      Edit
+                    </Button> */}
                     <Button size="sm" variant="danger" onClick={() => deleteHandler(item._id)}>
                       Delete
                     </Button>
@@ -196,7 +220,7 @@ const CarManagement = () => {
                   type="text"
                   className="form-control"
                   value={RowData.title}
-                  readOnly
+                  onChange={(e) => SetRowData({...RowData, title: e.target.value})}
                 />
               </div>
               <div className="form-group mt-3">
@@ -204,7 +228,8 @@ const CarManagement = () => {
                   type="email"
                   className="form-control"
                   value={RowData.email}
-                  readOnly
+                  onChange={(e) => SetRowData({...RowData, email: e.target.value})}
+
                 />
               </div>
               <div className="form-group mt-3">
@@ -212,7 +237,8 @@ const CarManagement = () => {
                   type="text"
                   className="form-control"
                   value={RowData.brand}
-                  readOnly
+                  onChange={(e) => SetRowData({...RowData, brand: e.target.value})}
+
                 />
               </div>
               <div className="form-group mt-3">
@@ -220,7 +246,8 @@ const CarManagement = () => {
                   type="text"
                   className="form-control"
                   value={RowData.price}
-                  readOnly
+                  onChange={(e) => SetRowData({...RowData, price: e.target.value})}
+
                 />
               </div>
               <div className="form-group mt-3">
@@ -228,7 +255,8 @@ const CarManagement = () => {
                   type="text"
                   className="form-control"
                   value={RowData.fuel}
-                  readOnly
+                  onChange={(e) => SetRowData({...RowData, fuel: e.target.value})}
+
                 />
               </div>
               <div className="form-group mt-3">
@@ -236,14 +264,15 @@ const CarManagement = () => {
                   type="text"
                   className="form-control"
                   value={RowData.model}
-                  readOnly
+                  onChange={(e) => SetRowData({...RowData, model: e.target.value})}
+
                 />
               </div>
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" onClick={handleBooking}>
-              Book Now
+            <Button variant="primary" onClick={() => {editHandler(RowData)}}>
+              Edit
             </Button>
             <Button variant="secondary" onClick={handleViewClose}>
               Close

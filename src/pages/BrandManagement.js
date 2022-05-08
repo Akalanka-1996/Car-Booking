@@ -15,6 +15,7 @@ const CarManagement = () => {
   const [ViewShow, SetViewShow] = useState(false);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [testObj, setTestObj] = useState()
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -94,18 +95,27 @@ const CarManagement = () => {
     }
   };
 
-  const editHandler = async ({ data }) => {
+  const editHandler = async (id)  => {
     console.log("abc");
-    console.log(data);
+    console.log(id)
     console.log("def");
-    // try {
-    //   const res = await axios.delete(`http://localhost:5000/brands/${id}`);
-    //   console.log("Item successfully deleted.");
-    //   alert("Brand deleted");
-    //   window.location.reload();
-    // } catch (error) {
-    //   alert(error);
-    // }
+
+    try {
+      const config = {
+        headers:{
+            "Content-type":"application/json"
+        }
+    }
+
+      const res = await axios.put(`http://localhost:5000/brands/${id._id}`, {
+        brand_name: id.brand_name, creation_date: id.creation_date, updation_date: id.updation_date
+      }, config);
+      console.log("Item successfully edited");
+      alert("Brand edited");
+      window.location.reload();
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const selectUser = () => {
@@ -236,7 +246,13 @@ const CarManagement = () => {
               <Form.Label>Brand Name</Form.Label>
               <Form.Control
                 type="name"
-                value={brand_name}
+                value={RowData.brand_name}
+                onChange={(e) => SetRowData({...RowData, brand_name: e.target.value})}
+                // onChange={(e) =>setTestObj({...testObj , brand_name: testObj.amount + 100 })}
+                
+                // onChange={(e) => setBrand_name(e.target.value)}
+                // onChange={(e) => SetRowData(e.target.value)}
+
                
               />
             </Form.Group>
@@ -244,6 +260,8 @@ const CarManagement = () => {
               <Form.Label>Creation Date</Form.Label>
               <Form.Control
                 type="name"
+                value={RowData.creation_date}
+                onChange={(e) => SetRowData({...RowData, creation_date: e.target.value})}
                 
               />
             </Form.Group>
@@ -251,6 +269,9 @@ const CarManagement = () => {
               <Form.Label>Updation Date</Form.Label>
               <Form.Control
                 type="name"
+                value={RowData.updation_date}
+                onChange={(e) => SetRowData({...RowData, updation_date: e.target.value})}
+                
                 
               />
             </Form.Group>
@@ -259,7 +280,7 @@ const CarManagement = () => {
           <Button variant="secondary" onClick={handleViewClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={editHandler}>
+          <Button variant="primary" onClick={() => {editHandler(RowData)}}>
             Edit
           </Button>
         </Modal.Footer>
