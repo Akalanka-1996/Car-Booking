@@ -41,6 +41,7 @@ const createBooking = asyncHandler(async (req, res) => {
    
   } = req.body;
 
+
   
     console.log(req.user)
     const newbooking = new newBooking({

@@ -88,7 +88,7 @@ const CarListComponent = () => {
           <Card style={{ width: "18rem" }} key={car._id}>
             <Card.Img variant="top" src="holder.js/100px180" />
             <Card.Body>
-              <Card.Title>{car.title}</Card.Title>
+              <Card.Title>Title <br></br>{car.title}</Card.Title>
               <Card.Subtitle className="mb-2 text-muted">
                 {car.brand}
               </Card.Subtitle>
@@ -116,6 +116,7 @@ const CarListComponent = () => {
                         <Form.Label>Name</Form.Label>
                         <Form.Control 
                         type="name" 
+                        required
                         value={name}
                         onChange={(e) => setName(e.target.value)} 
                         /> 
@@ -124,6 +125,7 @@ const CarListComponent = () => {
                         <Form.Label>Contact No.</Form.Label>
                         <Form.Control 
                         value={contact_no}
+                        required
                         onChange={(e) => setContact_no(e.target.value)} 
                         /> 
                     </Form.Group>
@@ -131,6 +133,7 @@ const CarListComponent = () => {
                         <Form.Label>Handover Date</Form.Label>
                         <Form.Control 
                         value={handover_date}
+                        required
                         onChange={(e) => setHandover_date(e.target.value)} 
                         
                         /> 
@@ -139,6 +142,7 @@ const CarListComponent = () => {
                         <Form.Label>Return Date</Form.Label>
                         <Form.Control 
                         value={return_date}
+                        required
                         onChange={(e) => setReturn_date(e.target.value)} 
                         /> 
                     </Form.Group>

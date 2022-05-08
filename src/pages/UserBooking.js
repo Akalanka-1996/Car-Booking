@@ -74,39 +74,84 @@ const UserBooking = () => {
       <style type="text/css">{`.navbar1 {display:none}`}</style>
 
       <h1 style={{ textAlign: "center", alignSelf: "center" }}>My Bookings</h1>
-
+      <ReactHTMLTableToExcel
+        id="test-table-xls-button"
+        className="download-table-xls-button btn btn-success mb-3"
+        table="table-to-xls"
+        filename="My Bookings"
+        sheet="tablexls"
+        buttonText="Export Data"
+      />
    
+      <Table striped bordered hover id="table-to-xls">
+        <thead>
+          <tr>
+            <th style={{ fontSize: 25 }}>Name</th>
+            <th style={{ fontSize: 25 }}>Contact No.</th>
+            <th style={{ fontSize: 25 }}>Handover Date</th>
+            <th style={{ fontSize: 25 }}>Return Date</th>
+            <th style={{ fontSize: 25 }}>Action</th>
 
-      {bookings.map((booking) => (
-        <Card style={{ width: "18rem" }} key={booking._id}>
-          {/* <Card.Img variant="top" src="holder.js/100px180" /> */}
-          <Card.Body>
-            <Card.Title>{booking.name}</Card.Title>
-            <Card.Subtitle className="mb-2 text-muted">
-              {booking.contact_no}
-            </Card.Subtitle>
-            <Card.Subtitle className="mb-2 text-muted">
-              {booking.handover_date}
-            </Card.Subtitle>
-            <Card.Subtitle className="mb-2 text-muted">
-              {booking.return_date} LKR
-            </Card.Subtitle>
-            <Button
-              size="sm"
-              variant="primary"
-              onClick={() => {
-                handleShow(SetRowData(booking));
-              }}
-            >
-              Edit
-            </Button>
-            &nbsp; &nbsp;
-            <Button variant="danger" onClick={() => deleteHandler(booking._id)}>
-              Delete
-            </Button>
-          </Card.Body>
-        </Card>
-      ))}
+
+          </tr>
+        </thead>
+        <tbody>
+          {bookings.map((booking) => (
+              <tr key={booking._id} style={{ fontSize: 15}}>
+                  <td>{booking.name}</td>
+                  <td>{booking.contact_no}</td>
+              
+                 
+                  <td>{booking.handover_date}</td>
+                  
+                  <td>{booking.return_date}</td>
+                  <td>
+
+                
+                  <Button size="sm" variant="primary" onClick={() => {
+                         handleShow(SetRowData(booking));
+                      }}>
+                  Edit
+                </Button>
+                <Button
+                  size="sm"
+                  variant="danger"
+                  onClick={() => deleteHandler(booking._id)}
+                >
+                  Cancel
+                </Button>
+                {/* <Button
+                  size="sm"
+                  variant="primary"
+                  //   onClick={() => {
+                  //     handleViewShow(SetRowData(item));
+                  //   }}
+                >
+                  Views
+                </Button> */}
+                {/* <Button size="sm" variant="primary" onClick={() => {
+                         handleShow(SetRowData(booking));
+                      }}>
+                  Edit
+                </Button>
+                <Button size="sm" variant="success" onClick={() => confirmHandler(booking._id)}>
+                  Confirm
+                </Button>
+                <Button
+                  size="sm"
+                  variant="warning"
+                  onClick={() => cancelHandler(booking._id)}
+                >
+                  Cancel
+                </Button> */}
+              </td>
+
+              </tr>
+
+          ))}
+        </tbody>
+      </Table>
+      
 
       {/* Edit Booking Modal  */}
 
