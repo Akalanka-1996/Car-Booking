@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Modal, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
 const CarManagement = () => {
   const [RowData, SetRowData] = useState([]);
   const [ViewShow, SetViewShow] = useState(false);
   const [show, setShow] = useState(false);
+  const [search, setSearch] = useState("");
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -25,8 +26,8 @@ const CarManagement = () => {
   const [price, setPrice] = useState();
   const [fuel, setFuel] = useState();
   const [model, setModel] = useState();
-  const [error, setError] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -64,36 +65,42 @@ const CarManagement = () => {
     //console.log(email, password);
 
     try {
-        // To make api requests, we need to provide json data
-        const config = {
-            headers:{
-                "Content-type":"application/json"
-            }
-        }
+      // To make api requests, we need to provide json data
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
 
-        setLoading(true)
+      setLoading(true);
 
-        // make request
+      // make request
 
-        const {data} = await axios.post('http://localhost:5000/CarManagement', {
-            title, email, brand, price, fuel, model
-        }, 
-        config)
+      const { data } = await axios.post(
+        "http://localhost:5000/CarManagement",
+        {
+          title,
+          email,
+          brand,
+          price,
+          fuel,
+          model,
+        },
+        config
+      );
 
-        window.location.reload()
+      window.location.reload();
 
-        // store data in local storage
-        console.log(data);
-        // localStorage.setItem('userInfo', JSON.stringify(data))
-        // navigate('/car-management')
+      // store data in local storage
+      console.log(data);
+      // localStorage.setItem('userInfo', JSON.stringify(data))
+      // navigate('/car-management')
 
-        setLoading(false)
-
+      setLoading(false);
     } catch (error) {
-        setError(error.response.data.message)
+      setError(error.response.data.message);
     }
-
-  }
+  };
 
   const deleteHandler = async (id) => {
     // console.log("delete")
@@ -101,31 +108,41 @@ const CarManagement = () => {
     // const url = `http://localhost:5000/CarManagement/${car.id}`
 
     try {
-      const res = await axios.delete(`http://localhost:5000/CarManagement/${id}`)
-      console.log('Item successfully deleted.')
-      alert("Car deleted")
-      GetCarData()
+      const res = await axios.delete(
+        `http://localhost:5000/CarManagement/${id}`
+      );
+      console.log("Item successfully deleted.");
+      alert("Car deleted");
+      GetCarData();
     } catch (error) {
-      alert(error)
+      alert(error);
     }
+  };
 
-  }
-
-  const editHandler = async (id)  => {
+  const editHandler = async (id) => {
     console.log("abc");
-    console.log(id)
+    console.log(id);
     console.log("def");
 
     try {
       const config = {
-        headers:{
-            "Content-type":"application/json"
-        }
-    }
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
 
-      const res = await axios.put(`http://localhost:5000/Carmanagement/${id._id}`, {
-        title: id.title, email: id.email, brand: id.brand, price: id.price, fuel: id.price, model: id.model
-      }, config);
+      const res = await axios.put(
+        `http://localhost:5000/Carmanagement/${id._id}`,
+        {
+          title: id.title,
+          email: id.email,
+          brand: id.brand,
+          price: id.price,
+          fuel: id.price,
+          model: id.model,
+        },
+        config
+      );
       console.log("Item successfully edited");
       alert("Brand edited");
       window.location.reload();
@@ -133,7 +150,6 @@ const CarManagement = () => {
       alert(error);
     }
   };
-
 
   return (
     <div className="title">
@@ -151,14 +167,26 @@ const CarManagement = () => {
       </div>
       <div className="row">
         <div className="table-responsive">
-        <ReactHTMLTableToExcel
-                    id="test-table-xls-button"
-                    className="download-table-xls-button btn btn-success mb-3"
-                    table="table-to-xls"
-                    filename="car_list"
-                    sheet="tablexls"
-                    buttonText="Export Data"/>
-          <table className="table table-striped table-hover table-bordered" id="table-to-xls">
+          <ReactHTMLTableToExcel
+            id="test-table-xls-button"
+            className="download-table-xls-button btn btn-success mb-3"
+            table="table-to-xls"
+            filename="car_list"
+            sheet="tablexls"
+            buttonText="Export Data"
+          />
+          <div>
+              <input
+                type="text"
+                style={{ height: "5%" }}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+          <table
+            className="table table-striped table-hover table-bordered"
+            id="table-to-xls"
+          >
+            
             <thead>
               <tr>
                 <th style={{ fontSize: 20 }}>Vehicle Title</th>
@@ -171,7 +199,20 @@ const CarManagement = () => {
               </tr>
             </thead>
             <tbody>
-              {Data.map((item) => (
+              {Data.filter((val) => {
+                if (search === "") {
+                  return val;
+                } else if (
+                  val.title.toLowerCase().includes(search.toLowerCase()) ||
+                  val.email.toLowerCase().includes(search.toLowerCase()) ||
+                  val.brand.toLowerCase().includes(search.toLowerCase()) ||
+                  val.price.toLowerCase().includes(search.toLowerCase()) ||
+                  val.fuel.toLowerCase().includes(search.toLowerCase()) ||
+                  val.model.toLowerCase().includes(search.toLowerCase())
+                ) {
+                  return val;
+                }
+              }).map((item) => (
                 <tr key={item._id}>
                   <td style={{ fontSize: 15 }}>{item.title}</td>
                   <td style={{ fontSize: 15 }}>{item.email}</td>
@@ -192,7 +233,11 @@ const CarManagement = () => {
                     {/* <Button size="sm" variant="warning">
                       Edit
                     </Button> */}
-                    <Button size="sm" variant="danger" onClick={() => deleteHandler(item._id)}>
+                    <Button
+                      size="sm"
+                      variant="danger"
+                      onClick={() => deleteHandler(item._id)}
+                    >
                       Delete
                     </Button>
                   </td>
@@ -220,7 +265,9 @@ const CarManagement = () => {
                   type="text"
                   className="form-control"
                   value={RowData.title}
-                  onChange={(e) => SetRowData({...RowData, title: e.target.value})}
+                  onChange={(e) =>
+                    SetRowData({ ...RowData, title: e.target.value })
+                  }
                 />
               </div>
               <div className="form-group mt-3">
@@ -228,8 +275,9 @@ const CarManagement = () => {
                   type="email"
                   className="form-control"
                   value={RowData.email}
-                  onChange={(e) => SetRowData({...RowData, email: e.target.value})}
-
+                  onChange={(e) =>
+                    SetRowData({ ...RowData, email: e.target.value })
+                  }
                 />
               </div>
               <div className="form-group mt-3">
@@ -237,8 +285,9 @@ const CarManagement = () => {
                   type="text"
                   className="form-control"
                   value={RowData.brand}
-                  onChange={(e) => SetRowData({...RowData, brand: e.target.value})}
-
+                  onChange={(e) =>
+                    SetRowData({ ...RowData, brand: e.target.value })
+                  }
                 />
               </div>
               <div className="form-group mt-3">
@@ -246,8 +295,9 @@ const CarManagement = () => {
                   type="text"
                   className="form-control"
                   value={RowData.price}
-                  onChange={(e) => SetRowData({...RowData, price: e.target.value})}
-
+                  onChange={(e) =>
+                    SetRowData({ ...RowData, price: e.target.value })
+                  }
                 />
               </div>
               <div className="form-group mt-3">
@@ -255,8 +305,9 @@ const CarManagement = () => {
                   type="text"
                   className="form-control"
                   value={RowData.fuel}
-                  onChange={(e) => SetRowData({...RowData, fuel: e.target.value})}
-
+                  onChange={(e) =>
+                    SetRowData({ ...RowData, fuel: e.target.value })
+                  }
                 />
               </div>
               <div className="form-group mt-3">
@@ -264,14 +315,20 @@ const CarManagement = () => {
                   type="text"
                   className="form-control"
                   value={RowData.model}
-                  onChange={(e) => SetRowData({...RowData, model: e.target.value})}
-
+                  onChange={(e) =>
+                    SetRowData({ ...RowData, model: e.target.value })
+                  }
                 />
               </div>
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="primary" onClick={() => {editHandler(RowData)}}>
+            <Button
+              variant="primary"
+              onClick={() => {
+                editHandler(RowData);
+              }}
+            >
               Edit
             </Button>
             <Button variant="secondary" onClick={handleViewClose}>
@@ -288,17 +345,16 @@ const CarManagement = () => {
           </Modal.Header>
           <Modal.Body>
             <Form>
-             
               <Form.Group
                 className="mb-3"
                 controlId="exampleForm.ControlInput1"
               >
                 <Form.Label>Title</Form.Label>
-                <Form.Control 
-                type="name" 
-                value={title}
-                onChange={(e) => setTitle(e.target.value)} />
-                
+                <Form.Control
+                  type="name"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
               </Form.Group>
 
               <Form.Group
@@ -317,48 +373,44 @@ const CarManagement = () => {
                 controlId="exampleForm.ControlInput3"
               >
                 <Form.Label>Brand</Form.Label>
-                <Form.Control 
-                type="name" 
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
+                <Form.Control
+                  type="name"
+                  value={brand}
+                  onChange={(e) => setBrand(e.target.value)}
                 />
-               
               </Form.Group>
               <Form.Group
                 className="mb-3"
                 controlId="exampleForm.ControlInput4"
               >
                 <Form.Label>Price</Form.Label>
-                <Form.Control 
-                type="name"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                <Form.Control
+                  type="name"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
                 />
-               
               </Form.Group>
               <Form.Group
                 className="mb-3"
                 controlId="exampleForm.ControlInput5"
               >
                 <Form.Label>Fuel</Form.Label>
-                <Form.Control 
-                type="name"
-                value={fuel}
-                onChange={(e) => setFuel(e.target.value)}
+                <Form.Control
+                  type="name"
+                  value={fuel}
+                  onChange={(e) => setFuel(e.target.value)}
                 />
-                
               </Form.Group>
               <Form.Group
                 className="mb-3"
                 controlId="exampleForm.ControlInput6"
               >
                 <Form.Label>Model</Form.Label>
-                <Form.Control 
-                type="name"
-                value={model}
-                onChange={(e) => setModel(e.target.value)}
+                <Form.Control
+                  type="name"
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
                 />
-               
               </Form.Group>
             </Form>
           </Modal.Body>
@@ -366,7 +418,7 @@ const CarManagement = () => {
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button variant="primary" onClick={carHandler}  >
+            <Button variant="primary" onClick={carHandler}>
               Add Car
             </Button>
           </Modal.Footer>

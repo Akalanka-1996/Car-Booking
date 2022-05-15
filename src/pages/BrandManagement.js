@@ -150,6 +150,13 @@ const CarManagement = () => {
         sheet="tablexls"
         buttonText="Export Data"
       />
+       <div>
+        <input 
+        type="text"
+        style={{height: "5%"}}
+        onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
       <Table striped bordered hover id="table-to-xls">
         <thead>
           <tr>
