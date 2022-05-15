@@ -13,6 +13,7 @@ const UserBooking = () => {
   const [contact_no, setContact_no] = useState();
   const [return_date, setReturn_date] = useState();
   const [RowData, SetRowData] = useState([]);
+  const [search, setSearch] = useState("");
 
   const handleClose = () => setShow(false);
   const handleShow = (booking) => {
@@ -44,21 +45,28 @@ const UserBooking = () => {
     }
   };
 
-  const editHandler = async (booking)  => {
+  const editHandler = async (booking) => {
     console.log("abc");
-    console.log(booking)
+    console.log(booking);
     console.log("def");
 
     try {
       const config = {
-        headers:{
-            "Content-type":"application/json"
-        }
-    }
+        headers: {
+          "Content-type": "application/json",
+        },
+      };
 
-      const res = await axios.put(`http://localhost:5000/newbooking/update-booking/${booking._id}`, {
-        name: booking.name, contact_no: booking.contact_no, handover_date: booking.handover_date, return_date: booking.return_date 
-      }, config);
+      const res = await axios.put(
+        `http://localhost:5000/newbooking/update-booking/${booking._id}`,
+        {
+          name: booking.name,
+          contact_no: booking.contact_no,
+          handover_date: booking.handover_date,
+          return_date: booking.return_date,
+        },
+        config
+      );
       console.log("Item successfully edited");
       alert("Booking edited");
       window.location.reload();
@@ -82,7 +90,15 @@ const UserBooking = () => {
         sheet="tablexls"
         buttonText="Export Data"
       />
-   
+
+      <div>
+        <input
+          type="text"
+          style={{ height: "5%" }}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
       <Table striped bordered hover id="table-to-xls">
         <thead>
           <tr>
@@ -91,36 +107,45 @@ const UserBooking = () => {
             <th style={{ fontSize: 25 }}>Handover Date</th>
             <th style={{ fontSize: 25 }}>Return Date</th>
             <th style={{ fontSize: 25 }}>Action</th>
-
-
           </tr>
         </thead>
         <tbody>
-          {bookings.map((booking) => (
-              <tr key={booking._id} style={{ fontSize: 15}}>
-                  <td>{booking.name}</td>
-                  <td>{booking.contact_no}</td>
-              
-                 
-                  <td>{booking.handover_date}</td>
-                  
-                  <td>{booking.return_date}</td>
-                  <td>
+          {bookings
+            .filter((val) => {
+              if (search === "") {
+                return val;
+              } else if (
+                val.name.toLowerCase().includes(search.toLowerCase())
+              ) {
+                return val;
+              }
+            })
+            .map((booking) => (
+              <tr key={booking._id} style={{ fontSize: 15 }}>
+                <td>{booking.name}</td>
+                <td>{booking.contact_no}</td>
 
-                
-                  <Button size="sm" variant="primary" onClick={() => {
-                         handleShow(SetRowData(booking));
-                      }}>
-                  Edit
-                </Button>
-                <Button
-                  size="sm"
-                  variant="danger"
-                  onClick={() => deleteHandler(booking._id)}
-                >
-                  Cancel
-                </Button>
-                {/* <Button
+                <td>{booking.handover_date}</td>
+
+                <td>{booking.return_date}</td>
+                <td>
+                  <Button
+                    size="sm"
+                    variant="primary"
+                    onClick={() => {
+                      handleShow(SetRowData(booking));
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="danger"
+                    onClick={() => deleteHandler(booking._id)}
+                  >
+                    Cancel
+                  </Button>
+                  {/* <Button
                   size="sm"
                   variant="primary"
                   //   onClick={() => {
@@ -129,7 +154,7 @@ const UserBooking = () => {
                 >
                   Views
                 </Button> */}
-                {/* <Button size="sm" variant="primary" onClick={() => {
+                  {/* <Button size="sm" variant="primary" onClick={() => {
                          handleShow(SetRowData(booking));
                       }}>
                   Edit
@@ -144,14 +169,11 @@ const UserBooking = () => {
                 >
                   Cancel
                 </Button> */}
-              </td>
-
+                </td>
               </tr>
-
-          ))}
+            ))}
         </tbody>
       </Table>
-      
 
       {/* Edit Booking Modal  */}
 
