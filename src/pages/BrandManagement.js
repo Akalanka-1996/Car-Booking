@@ -16,6 +16,8 @@ const CarManagement = () => {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [testObj, setTestObj] = useState()
+  const [search, setSearch] = useState("")
+
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -126,6 +128,14 @@ const CarManagement = () => {
       <h1 style={{ textAlign: "center", alignSelf: "center" }}>
         Brand Management
       </h1>
+      <div>
+        <input 
+        type="text"
+        style={{height: "5%"}}
+        onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
       <div className="mt-5 mb-4">
         <Button variant="primary" onClick={handleShow}>
           <i className="fa fa-plu"></i>
@@ -150,7 +160,17 @@ const CarManagement = () => {
           </tr>
         </thead>
         <tbody>
-          {brands.map((brand) => (
+          {brands.filter((val) => {
+            if(search === "") {
+              return val
+            } else if(
+              val.brand_name.toLowerCase().includes(search.toLowerCase())
+
+            ){
+              return val
+            }
+          } )
+          .map((brand) => (
             <tr key={brand._id} style={{ fontSize: 15 }}>
               <td>{brand.brand_name}</td>
               <td>{brand.creation_date}</td>
